@@ -1,4 +1,4 @@
-package br.com.otavioluism.gestao_vagas.modules.candidate.exceptions;
+package br.com.otavioluism.gestao_vagas.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
