@@ -15,7 +15,8 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable()) // desabilitando a autorização e autenticacao as rotas
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/candidate/").permitAll()
-                            .requestMatchers("/company/").permitAll();
+                            .requestMatchers("/company/").permitAll()
+                            .requestMatchers("/auth/company").permitAll();
                     auth.anyRequest().authenticated(); // qualquer outros rotas autenticar
                 });
         return http.build();
