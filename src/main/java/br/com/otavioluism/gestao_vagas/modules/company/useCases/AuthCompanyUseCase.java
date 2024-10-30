@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.naming.AuthenticationException;
+import java.time.Duration;
+import java.time.Instant;
 
 
 @Service
@@ -45,6 +47,7 @@ public class AuthCompanyUseCase {
         // se as senhas forem iguais -> gerar token JWT
         Algorithm algorithm = Algorithm.HMAC256(secretKey); // SecretId faz com que criamos uma chave de assinatura para conseguir fazer o decode do JWT, sem a assinatura não conseguimos manipular o token
         var token = JWT.create().withIssuer("javavagas") // emissor do token
+                .withExpiresAt(Instant.now().plus(Duration.ofHours(2))) // adicionando o tempo de expiração do token
                 .withSubject(company.getId().toString()) // o dono do token
                 .sign(algorithm);
         return token;
