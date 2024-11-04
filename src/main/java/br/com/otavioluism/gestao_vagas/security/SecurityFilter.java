@@ -32,7 +32,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if (headerAuth != null) {
             var subjectToken = this.jwtProvider.validateToken(headerAuth);
-            if (subjectToken.isBlank()) {
+            if (subjectToken.isEmpty()) { // se for vazio
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
