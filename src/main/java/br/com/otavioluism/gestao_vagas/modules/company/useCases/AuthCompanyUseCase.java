@@ -19,7 +19,7 @@ import java.time.Instant;
 public class AuthCompanyUseCase {
 
     // anotation responsável por pegar os dados do aplication.properties
-    @Value("${secret.token.security}")
+    @Value("${secret.token.secret}")
     private String secretKey;
 
     @Autowired
