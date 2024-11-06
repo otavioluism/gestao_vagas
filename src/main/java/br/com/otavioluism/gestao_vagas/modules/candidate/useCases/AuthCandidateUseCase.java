@@ -45,18 +45,20 @@ public class AuthCandidateUseCase {
         }
 
         var algorithm = Algorithm.HMAC256(secretKey);
+        var expireIn = Instant.now().plus(Duration.ofMinutes(10));
 
         var token = JWT.create()
                 .withIssuer("javagas")
                 .withSubject(candidate.getId().toString())
                 .withClaim("roles", Arrays.asList("candidate"))
-                .withExpiresAt(Instant.now().plus(Duration.ofMinutes(10)))
+                .withExpiresAt(expireIn)
                 .sign(algorithm);
 
         // passando o valor para o atributo
 
         return AuthCandidateResponseDTO.builder()
                 .access_token(token)
+                .expireIn(expireIn.toEpochMilli()) // enviando o tempo de expiracao em milisegundos no campo do objeto
                 .build();
     }
 }
