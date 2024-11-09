@@ -30,15 +30,17 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         String headerAuth = request.getHeader("Authorization");
 
-        if (headerAuth != null) {
-            var subjectToken = this.jwtProvider.validateToken(headerAuth);
-            if (subjectToken.isEmpty()) { // se for vazio
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
+        if (request.getRequestURI().startsWith("/company")) {
+            if (headerAuth != null) {
+                var subjectToken = this.jwtProvider.validateToken(headerAuth);
+                if (subjectToken.isEmpty()) { // se for vazio
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
+                }
+                request.setAttribute("company_id", subjectToken);
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(subjectToken, null, Collections.emptyList());
+                SecurityContextHolder.getContext().setAuthentication(auth); // estamos inserindo para o spring security a variavel auth que nos denota como esta sendo autenticado as rotas
             }
-            request.setAttribute("company_id", subjectToken);
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(subjectToken, null, Collections.emptyList());
-            SecurityContextHolder.getContext().setAuthentication(auth); // estamos inserindo para o spring security a variavel auth que nos denota como esta sendo autenticado as rotas
         }
 
         filterChain.doFilter(request, response);
