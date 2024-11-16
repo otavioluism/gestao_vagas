@@ -26,7 +26,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        SecurityContextHolder.getContext().setAuthentication(null);
+//        SecurityContextHolder.getContext().setAuthentication(null);
 
         String headerAuth = request.getHeader("Authorization");
 

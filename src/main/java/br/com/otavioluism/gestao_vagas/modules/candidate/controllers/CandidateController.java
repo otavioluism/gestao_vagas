@@ -6,6 +6,7 @@ import br.com.otavioluism.gestao_vagas.modules.candidate.useCases.ProfileCandida
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
@@ -33,6 +34,7 @@ public class CandidateController {
     }
 
     @GetMapping("/")
+    @PreAuthorize("hasRole('CANDIDATE')")
     public ResponseEntity<Object> get(HttpServletRequest request) {
         var idCandidate = request.getAttribute("candidate_id");
         try {
