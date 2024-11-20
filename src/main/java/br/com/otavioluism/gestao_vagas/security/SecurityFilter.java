@@ -7,12 +7,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
@@ -32,13 +32,19 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if (request.getRequestURI().startsWith("/company")) {
             if (headerAuth != null) {
-                var subjectToken = this.jwtProvider.validateToken(headerAuth);
-                if (subjectToken.isEmpty()) { // se for vazio
+                var tokenDecoded = this.jwtProvider.validateToken(headerAuth);
+                if (tokenDecoded == null) { // se for vazio
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     return;
                 }
-                request.setAttribute("company_id", subjectToken);
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(subjectToken, null, Collections.emptyList());
+
+                var roles = tokenDecoded.getClaim("roles").asList(Object.class);
+                var grants = roles.stream()
+                                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toString().toUpperCase()))
+                                        .toList();
+
+                request.setAttribute("company_id", tokenDecoded.getSubject());
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(tokenDecoded.getSubject(), null, grants);
                 SecurityContextHolder.getContext().setAuthentication(auth); // estamos inserindo para o spring security a variavel auth que nos denota como esta sendo autenticado as rotas
             }
         }
