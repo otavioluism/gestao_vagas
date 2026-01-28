@@ -2,6 +2,7 @@ package com.olmcompany.gestao_vagas.modules.candidate;
 
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -13,6 +14,7 @@ public class CandidateEntity {
 
     private UUID id;
 
+    @NotBlank
     @Pattern(regexp = "\\S+", message = "O campo [username] não deve conter espaço!")
     private String username;
 
