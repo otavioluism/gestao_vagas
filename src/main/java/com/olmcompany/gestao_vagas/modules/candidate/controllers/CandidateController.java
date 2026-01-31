@@ -1,8 +1,9 @@
 package com.olmcompany.gestao_vagas.modules.candidate.controllers;
 
 import com.olmcompany.gestao_vagas.modules.candidate.CandidateEntity;
-import com.olmcompany.gestao_vagas.modules.candidate.CandidateRepository;
+import com.olmcompany.gestao_vagas.modules.candidate.useCases.CreateCandidateUseCase;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,17 +13,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/candidate")
 public class CandidateController {
 
-    private CandidateRepository candidateRepository;
+    private CreateCandidateUseCase createCandidateUseCase;
 
-    public CandidateController(CandidateRepository candidateRepository){
-        this.candidateRepository = candidateRepository;
+    public CandidateController(CreateCandidateUseCase createCandidateUseCase){
+        this.createCandidateUseCase = createCandidateUseCase;
     }
 
     @PostMapping("/")
-    public CandidateEntity create(@Valid @RequestBody CandidateEntity candidateEntity){
-        System.out.println("Imprimindo informação do candidato:");
-        System.out.println(candidateEntity.getName());
-        System.out.println(candidateEntity.getUsername());
-        return this.candidateRepository.save(candidateEntity);
+    public ResponseEntity<Object> create(@Valid @RequestBody CandidateEntity candidateEntity){
+        try {
+            var response = this.createCandidateUseCase.execute(candidateEntity);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 }
