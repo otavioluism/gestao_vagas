@@ -1,5 +1,4 @@
-package com.olmcompany.gestao_vagas.modules.candidate;
-
+package com.olmcompany.gestao_vagas.modules.company.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,12 +14,12 @@ import org.hibernate.validator.constraints.Length;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Entity(name="company")
 @Data
-@Entity(name = "candidate")
-public class CandidateEntity {
+public class CompanyEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy=GenerationType.UUID)
     private UUID id;
 
     @NotBlank
@@ -34,10 +33,8 @@ public class CandidateEntity {
     private String email;
 
     private String name;
-
+    private String website;
     private String description;
-
-    private String curriculum;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
