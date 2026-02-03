@@ -21,8 +21,11 @@ public class JobEntity {
     private String level;
 
     @ManyToOne
-    @JoinColumn(name="company_id")
+    @JoinColumn(name="company_id", updatable = false, insertable = false)
     private CompanyEntity companyEntity;
+
+    @Column(name = "company_id")
+    private UUID companyId;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
