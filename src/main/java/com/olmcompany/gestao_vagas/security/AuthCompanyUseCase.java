@@ -10,11 +10,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.Instant;
+
 @Service
 public class AuthCompanyUseCase {
 
     @Value("${security.token.secret}")
     private String secretKey;
+
+    @Value("${security.token.secret.expire.hours}")
+    private String expiresTokenAt;
 
     private final CompanyRepository companyRepository;
 
@@ -40,6 +46,7 @@ public class AuthCompanyUseCase {
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
         return JWT.create().withIssuer("olmCompany")
+                .withExpiresAt(Instant.now().plus(Duration.ofHours(Integer.parseInt(expiresTokenAt))))
                 .withSubject(company.getId().toString())
                 .sign(algorithm);
     }
