@@ -1,7 +1,10 @@
 package com.olmcompany.gestao_vagas.modules.company.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.cglib.core.Local;
 
@@ -11,6 +14,9 @@ import java.util.UUID;
 
 @Entity(name="job")
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class JobEntity {
 
     @Id
