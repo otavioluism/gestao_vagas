@@ -29,21 +29,22 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         SecurityContextHolder.getContext().setAuthentication(null);
 
-        if (header != null) { // estamos limitando para somente interceptar o que for authorization
-            String subject = jwtProvider.validatedToken(header);
-            if (subject.isEmpty()){
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
+        if (request.getRequestURI().startsWith("/company")) {
+            if (header != null) { // estamos limitando para somente interceptar o que for authorization
+                String subject = jwtProvider.validatedToken(header);
+                if (subject.isEmpty()){
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
+                }
+                request.setAttribute("company_id", subject);
+                // aqui estamos repassando a authenticacao e informacao para o fluxo do spring security
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(subject, null, Collections.emptyList());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-            request.setAttribute("company_id", subject);
-            // aqui estamos repassando a authenticacao e informacao para o fluxo do spring security
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(subject, null, Collections.emptyList());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
-
         System.out.println(header);
-        System.out.println("Passei por aqui!");
+        System.out.println("Passei por aqui e irei chamar o outro filtro!");
 
         filterChain.doFilter(request, response); // precisamos usar isso para chamar o controller senão não chega até ele
     }
