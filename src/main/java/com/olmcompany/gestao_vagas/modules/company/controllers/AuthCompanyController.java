@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/company")
 public class AuthCompanyController {
 
     private AuthCompanyUseCase authCompanyUseCase;
@@ -19,7 +19,7 @@ public class AuthCompanyController {
         this.authCompanyUseCase = authCompanyUseCase;
     }
 
-    @PostMapping("/company/")
+    @PostMapping("/auth/")
     public ResponseEntity login(@RequestBody AuthInfoDTO authInfoDTO) {
         try {
             var token = this.authCompanyUseCase.execute(authInfoDTO);
