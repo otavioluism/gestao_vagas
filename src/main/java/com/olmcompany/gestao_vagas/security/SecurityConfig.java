@@ -23,7 +23,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                             auth.requestMatchers("/candidate/").permitAll()
                                 .requestMatchers("/company/").permitAll()
-                                .requestMatchers("/auth/company/").permitAll();
+                                .requestMatchers("/auth/company/").permitAll()
+                                .requestMatchers("/candidate/auth/").permitAll();
                             auth.anyRequest().authenticated();
                         }
                 ).addFilterBefore(this.securityFilter, BasicAuthenticationFilter.class); // estou mudando a ordem do meu filtro, para rodar antes do authorizaHttpRequests
