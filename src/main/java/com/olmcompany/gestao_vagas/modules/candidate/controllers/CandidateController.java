@@ -2,12 +2,13 @@ package com.olmcompany.gestao_vagas.modules.candidate.controllers;
 
 import com.olmcompany.gestao_vagas.modules.candidate.CandidateEntity;
 import com.olmcompany.gestao_vagas.modules.candidate.useCases.CreateCandidateUseCase;
+import com.olmcompany.gestao_vagas.modules.candidate.useCases.ProfileCandidateUseCase;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/candidate")
@@ -15,8 +16,11 @@ public class CandidateController {
 
     private CreateCandidateUseCase createCandidateUseCase;
 
-    public CandidateController(CreateCandidateUseCase createCandidateUseCase){
+    private ProfileCandidateUseCase profileCandidateUseCase;
+
+    public CandidateController(CreateCandidateUseCase createCandidateUseCase, ProfileCandidateUseCase profileCandidateUseCase){
         this.createCandidateUseCase = createCandidateUseCase;
+        this.profileCandidateUseCase = profileCandidateUseCase;
     }
 
     @PostMapping("/")
@@ -24,6 +28,17 @@ public class CandidateController {
         try {
             var response = this.createCandidateUseCase.execute(candidateEntity);
             return ResponseEntity.ok().body(response);
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
+
+    @GetMapping("/")
+    public ResponseEntity get(HttpServletRequest request){
+        var candidateId = request.getAttribute("candidate_id");
+        try {
+            var candidate = this.profileCandidateUseCase.execute(UUID.fromString(candidateId.toString()));
+            return ResponseEntity.ok().body(candidate);
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }

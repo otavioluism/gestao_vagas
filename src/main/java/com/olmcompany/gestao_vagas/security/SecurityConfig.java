@@ -13,8 +13,11 @@ public class SecurityConfig {
 
     private SecurityFilter securityFilter;
 
-    public SecurityConfig(SecurityFilter securityFilter) {
+    private SecurityFilterCandidate securityFilterCandidate;
+
+    public SecurityConfig(SecurityFilter securityFilter, SecurityFilterCandidate securityFilterCandidate) {
         this.securityFilter = securityFilter;
+        this.securityFilterCandidate = securityFilterCandidate;
     }
 
     @Bean
@@ -27,7 +30,8 @@ public class SecurityConfig {
                                 .requestMatchers("/candidate/auth/").permitAll();
                             auth.anyRequest().authenticated();
                         }
-                ).addFilterBefore(this.securityFilter, BasicAuthenticationFilter.class); // estou mudando a ordem do meu filtro, para rodar antes do authorizaHttpRequests
+                ).addFilterBefore(this.securityFilterCandidate, BasicAuthenticationFilter.class)
+                .addFilterBefore(this.securityFilter, BasicAuthenticationFilter.class); // estou mudando a ordem do meu filtro, para rodar antes do authorizaHttpRequests
 
         return http.build();
     }
