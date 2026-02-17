@@ -18,7 +18,7 @@ import java.util.Arrays;
 @Service
 public class AuthCandidateUseCase {
 
-    @Value("security.token.secret.candidate")
+    @Value("${security.token.secret.candidate}")
     private String secretKey;
 
     @Value("${security.token.secret.expire.hours}")
