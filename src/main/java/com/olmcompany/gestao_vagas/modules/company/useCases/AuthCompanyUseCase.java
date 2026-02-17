@@ -1,4 +1,4 @@
-package com.olmcompany.gestao_vagas.security;
+package com.olmcompany.gestao_vagas.modules.company.useCases;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -16,7 +16,7 @@ import java.time.Instant;
 @Service
 public class AuthCompanyUseCase {
 
-    @Value("${security.token.secret}")
+    @Value("${security.token.secret.company}")
     private String secretKey;
 
     @Value("${security.token.secret.expire.hours}")
