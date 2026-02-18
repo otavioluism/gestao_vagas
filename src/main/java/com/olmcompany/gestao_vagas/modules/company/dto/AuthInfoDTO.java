@@ -1,4 +1,4 @@
-package com.olmcompany.gestao_vagas.modules.dto;
+package com.olmcompany.gestao_vagas.modules.company.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class ProfileCandidateResponseDTO {
+public class ProfileResponseCandidateDTO {
     private String email;
     private String name;
     private String description;

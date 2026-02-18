@@ -1,6 +1,6 @@
 package com.olmcompany.gestao_vagas.modules.company.controllers;
 
-import com.olmcompany.gestao_vagas.modules.dto.AuthInfoDTO;
+import com.olmcompany.gestao_vagas.modules.company.dto.AuthInfoDTO;
 import com.olmcompany.gestao_vagas.modules.company.useCases.AuthCompanyUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,10 +1,10 @@
-package com.olmcompany.gestao_vagas.modules.dto;
+package com.olmcompany.gestao_vagas.modules.company.dto;
 
 import lombok.Data;
 
 @Data
 
-public class JobEntityDTO {
+public class JobRequestEntityDTO {
 
     private String description;
     private String benefits;

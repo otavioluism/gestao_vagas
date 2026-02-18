@@ -4,14 +4,16 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.olmcompany.gestao_vagas.exceptions.AuthException;
 import com.olmcompany.gestao_vagas.exceptions.UserNotFoundException;
+import com.olmcompany.gestao_vagas.modules.company.dto.AuthResponseCompanyDTO;
 import com.olmcompany.gestao_vagas.modules.company.repositories.CompanyRepository;
-import com.olmcompany.gestao_vagas.modules.dto.AuthInfoDTO;
+import com.olmcompany.gestao_vagas.modules.company.dto.AuthInfoDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 
 @Service
 public class AuthCompanyUseCase {
@@ -31,7 +33,7 @@ public class AuthCompanyUseCase {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public String execute(AuthInfoDTO authInfoDTO) {
+    public AuthResponseCompanyDTO execute(AuthInfoDTO authInfoDTO) {
 
         var company = this.companyRepository.findByUsername(authInfoDTO.getUsername()).orElseThrow(
                 () -> new UserNotFoundException("Username/Password invalid!")
@@ -45,9 +47,17 @@ public class AuthCompanyUseCase {
 
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
-        return JWT.create().withIssuer("olmCompany")
-                .withExpiresAt(Instant.now().plus(Duration.ofHours(Integer.parseInt(expiresTokenAt))))
+        var expiresIn = Instant.now().plus(Duration.ofHours(Integer.parseInt(expiresTokenAt)));
+
+        var token = JWT.create().withIssuer("olmCompany")
+                .withExpiresAt(expiresIn)
                 .withSubject(company.getId().toString())
+                .withClaim("roles", Arrays.asList("COMPANY"))
                 .sign(algorithm);
+
+        return AuthResponseCompanyDTO.builder()
+                .access_token(token)
+                .expires_in(expiresIn.toEpochMilli())
+                .build();
     }
 }

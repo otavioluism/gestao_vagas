@@ -1,5 +1,6 @@
 package com.olmcompany.gestao_vagas.security;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.olmcompany.gestao_vagas.providers.JWTProvider;
 import com.zaxxer.hikari.util.Credentials;
 import jakarta.servlet.FilterChain;
@@ -7,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -29,14 +31,21 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if (request.getRequestURI().startsWith("/company")) {
             if (header != null) { // estamos limitando para somente interceptar o que for authorization
-                String subject = jwtProvider.validatedToken(header);
-                if (subject.isEmpty()){
+                DecodedJWT token = jwtProvider.validatedToken(header);
+                if (token == null){
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     return;
                 }
-                request.setAttribute("company_id", subject);
+                request.setAttribute("company_id", token.getSubject());
+
+                var roles = token.getClaim("roles").asList(Object.class);
+
+                var grants = roles.stream()
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toString().toUpperCase()))
+                        .toList();
+
                 // aqui estamos repassando a authenticacao e informacao para o fluxo do spring security
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(subject, null, Collections.emptyList());
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(token.getSubject(), null, grants);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
