@@ -27,8 +27,6 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
 
-        SecurityContextHolder.getContext().setAuthentication(null);
-
         if (request.getRequestURI().startsWith("/company")) {
             if (header != null) { // estamos limitando para somente interceptar o que for authorization
                 String subject = jwtProvider.validatedToken(header);
