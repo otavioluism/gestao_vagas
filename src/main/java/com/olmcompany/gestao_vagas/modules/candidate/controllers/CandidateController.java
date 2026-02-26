@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -69,6 +70,7 @@ public class CandidateController {
                     @Content(array = @ArraySchema(schema = @Schema(implementation = JobEntity.class)))
             })
     ) // neste insere como será a saída quando der certo, lembrando que pode colocar mais de um
+    @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity getJobs(@RequestParam String filter) {
         try {
             var jobs = this.listAllJobsUseCase.execute(filter);
