@@ -17,6 +17,12 @@ public class SecurityConfig {
 
     private SecurityFilterCandidate securityFilterCandidate;
 
+    private static final String[] SWAGGER_LIST = {
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/swagger-resources/**"
+    };
+
     public SecurityConfig(SecurityFilter securityFilter, SecurityFilterCandidate securityFilterCandidate) {
         this.securityFilter = securityFilter;
         this.securityFilterCandidate = securityFilterCandidate;
@@ -29,6 +35,7 @@ public class SecurityConfig {
                             auth.requestMatchers("/candidate/").permitAll()
                                 .requestMatchers("/company/").permitAll()
                                 .requestMatchers("/company/auth/").permitAll()
+                                .requestMatchers(SWAGGER_LIST).permitAll()
                                 .requestMatchers("/candidate/auth/").permitAll();
                             auth.anyRequest().authenticated();
                         }
